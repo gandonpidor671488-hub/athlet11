@@ -263,10 +263,6 @@ public class CartLine
     public string OldSumText => P.HasDiscount ? $"{P.OldPrice * Qty:N0} ₽" : "";
     public int Saving => P.HasDiscount ? (P.OldPrice - P.Price) * Qty : 0;
     public string FlavorText => string.IsNullOrEmpty(Item.Flavor) ? P.Weight : $"{Item.Flavor} · {P.Weight}";
-    // галочка выбора (как в корзине маркетплейсов): оформляются только выбранные
-    public bool Selected { get; set; } = true;
-    public string CheckMark => Selected ? "✓" : "";
-    public Color CheckBg => Selected ? Color.FromArgb("#FF6A2B") : Colors.Transparent;
 }
 
 public class Banner
@@ -493,12 +489,9 @@ public static class Store
     {
         var c = await Conn(); var res = new List<CartLine>();
         foreach (var i in await c.Table<CartItem>().ToListAsync())
-            if (await c.FindAsync<Product>(i.ProductId) is Product p) res.Add(new CartLine { Item = i, P = p, Selected = !Unselected.Contains(i.Id) });
+            if (await c.FindAsync<Product>(i.ProductId) is Product p) res.Add(new CartLine { Item = i, P = p });
         return res;
     }
-    /// <summary>Id позиций корзины, с которых снята галочка (по умолчанию выбрано всё).</summary>
-    public static readonly HashSet<int> Unselected = new();
-    public static async Task<List<CartLine>> SelectedCart() => (await Cart()).Where(l => l.Selected).ToList();
     public static async Task<int> CartCount() => (await Cart()).Sum(x => x.Qty);
 
     // ── промокоды и доставка ──
@@ -530,7 +523,7 @@ public static class Store
             $"{l.P.Name}{(string.IsNullOrEmpty(l.Item.Flavor) ? "" : " (" + l.Item.Flavor + ")")} × {l.Qty}"));
         o.ItemsData = string.Join(";", lines.Select(l => $"{l.P.Id}|{l.Item.Flavor}|{l.Qty}"));
         await c.InsertAsync(o);
-        foreach (var l in lines) { await c.DeleteAsync(l.Item); Unselected.Remove(l.Item.Id); }
+        await c.DeleteAllAsync<CartItem>();
         PromoCode = null;
         return o.Id;
     }

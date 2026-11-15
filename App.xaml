@@ -174,5 +174,47 @@
         </VerticalStackLayout>
       </Border>
     </DataTemplate>
+
+    <!-- Сегмент (Пункт выдачи / Курьер) -->
+    <ControlTemplate x:Key="SegTemplate">
+      <Border StrokeShape="RoundRectangle 18" Stroke="Transparent" StrokeThickness="1.5" BackgroundColor="Transparent" Padding="10,12">
+        <VisualStateManager.VisualStateGroups>
+          <VisualStateGroupList>
+            <VisualStateGroup x:Name="CheckedStates">
+              <VisualState x:Name="Checked"><VisualState.Setters>
+                <Setter Property="BackgroundColor" Value="#1C2028"/>
+                <Setter Property="Stroke" Value="#FF6A2B"/>
+              </VisualState.Setters></VisualState>
+              <VisualState x:Name="Unchecked"><VisualState.Setters>
+                <Setter Property="BackgroundColor" Value="Transparent"/>
+                <Setter Property="Stroke" Value="Transparent"/>
+              </VisualState.Setters></VisualState>
+            </VisualStateGroup>
+          </VisualStateGroupList>
+        </VisualStateManager.VisualStateGroups>
+        <ContentPresenter HorizontalOptions="Center" VerticalOptions="Center"/>
+      </Border>
+    </ControlTemplate>
+
+    <!-- Таблетка (способ оплаты) -->
+    <ControlTemplate x:Key="PillTemplate">
+      <Border StrokeShape="RoundRectangle 20" Stroke="#262B35" StrokeThickness="1.5" BackgroundColor="#13161C" Padding="18,11">
+        <VisualStateManager.VisualStateGroups>
+          <VisualStateGroupList>
+            <VisualStateGroup x:Name="CheckedStates">
+              <VisualState x:Name="Checked"><VisualState.Setters>
+                <Setter Property="BackgroundColor" Value="#1C2028"/>
+                <Setter Property="Stroke" Value="#FF6A2B"/>
+              </VisualState.Setters></VisualState>
+              <VisualState x:Name="Unchecked"><VisualState.Setters>
+                <Setter Property="BackgroundColor" Value="#13161C"/>
+                <Setter Property="Stroke" Value="#262B35"/>
+              </VisualState.Setters></VisualState>
+            </VisualStateGroup>
+          </VisualStateGroupList>
+        </VisualStateManager.VisualStateGroups>
+        <ContentPresenter HorizontalOptions="Center" VerticalOptions="Center"/>
+      </Border>
+    </ControlTemplate>
   </Application.Resources>
 </Application>

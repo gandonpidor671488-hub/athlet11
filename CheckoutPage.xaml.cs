@@ -3,31 +3,17 @@ public partial class CheckoutPage : ContentPage
 {
     List<CartLine> lines = new();
     int subtotal, discount, balance, maxBonus;
-    bool delivery;      // false — пункт выдачи, true — курьер
-    bool payNow;        // false — при получении, true — сразу (онлайн, демо)
 
-    static readonly Color AccentC = Color.FromArgb("#FF6A2B");
-    static readonly Color MutedC = Color.FromArgb("#8A93A3");
-    static readonly Color LineC = Color.FromArgb("#262B35");
-    static readonly Color CardC = Color.FromArgb("#13161C");
-    static readonly Color Card2C = Color.FromArgb("#1C2028");
-
-    public CheckoutPage()
-    {
-        InitializeComponent();
-        Address.TextEdited += (_, _) => { AddrErr.Text = ""; Err.Text = ""; };
-        Paint();
-    }
+    bool ready, suppress;
+    public CheckoutPage() { InitializeComponent(); ready = true; }
 
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        lines = await Store.SelectedCart();          // оформляются только выбранные в корзине товары
+        lines = await Store.Cart();
         subtotal = lines.Sum(x => x.Sum);
         discount = Store.DiscountFor(subtotal);
-        int pcs = lines.Sum(x => x.Qty);
-        SubHead.Text = $"{pcs} {PcsWord(pcs)}, {subtotal - discount:N0} ₽";
-        CountL.Text = $"{pcs} шт.";
+        CountL.Text = $"{lines.Sum(l => l.Qty)} шт.";
         BindableLayout.SetItemsSource(Thumbs, lines);
         SubL.Text = $"{subtotal:N0} ₽";
         DiscRow.IsVisible = discount > 0; DiscL.Text = $"−{discount:N0} ₽";
@@ -39,75 +25,78 @@ public partial class CheckoutPage : ContentPage
             : $"Баланс {balance:N0}. Бонусы появятся после первого заказа";
         if (string.IsNullOrEmpty(NameE.Text)) NameE.Text = Store.ProfileName;
         if (string.IsNullOrEmpty(Phone.Text)) Phone.Text = Store.ProfilePhone;
-        if (string.IsNullOrWhiteSpace(Address.Text)) Address.Text = Store.ProfileAddress;
+        if (string.IsNullOrEmpty(Address.Text)) { suppress = true; Address.Text = Store.ProfileAddress; suppress = false; }
         UpdateTotals();
     }
 
-    static string PcsWord(int n) => (n % 10 == 1 && n % 100 != 11) ? "товар"
-        : (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20)) ? "товара" : "товаров";
-
-    int DeliveryCost => Store.DeliveryCost(subtotal, delivery);
+    int DeliveryCost => Store.DeliveryCost(subtotal, Delivery.IsChecked);
     int BonusUsed => BonusSw.IsToggled ? maxBonus : 0;
 
-    void OnBonus(object? s, ToggledEventArgs e) { if (TotalL != null) UpdateTotals(); }
-
-    void OnSegPickup(object? s, TappedEventArgs e) { delivery = false; Paint(); UpdateTotals(); }
-    void OnSegCourier(object? s, TappedEventArgs e) { delivery = true; Paint(); UpdateTotals(); }
-    void OnPayNow(object? s, TappedEventArgs e) { payNow = true; Paint(); }
-    void OnPayLater(object? s, TappedEventArgs e) { payNow = false; Paint(); }
-
-    /// <summary>Перекрашивает переключатели и показывает нужный блок адреса.</summary>
-    void Paint()
-    {
-        SegPickup.BackgroundColor = delivery ? Colors.Transparent : AccentC;
-        SegPickupL.TextColor = delivery ? MutedC : Colors.White;
-        SegCourier.BackgroundColor = delivery ? AccentC : Colors.Transparent;
-        SegCourierL.TextColor = delivery ? Colors.White : MutedC;
-        PickupAddr.IsVisible = !delivery;
-        AddrBox.IsVisible = delivery;
-
-        PayNowB.BackgroundColor = payNow ? Card2C : CardC; PayNowB.Stroke = new SolidColorBrush(payNow ? AccentC : LineC);
-        PayLaterB.BackgroundColor = payNow ? CardC : Card2C; PayLaterB.Stroke = new SolidColorBrush(payNow ? LineC : AccentC);
-        PayHint.Text = payNow ? "Оплата картой онлайн (демо), деньги спишутся сразу" : "Оплатите заказ при получении";
-    }
+    void OnBonus(object? s, ToggledEventArgs e) { if (ready) UpdateTotals(); }
 
     void UpdateTotals()
     {
         int d = DeliveryCost, used = BonusUsed, total = subtotal - discount - used + d;
         BonusRow.IsVisible = used > 0; BonusL2.Text = $"−{used:N0} ₽";
-        DelL.Text = delivery ? (d == 0 ? "Бесплатно" : $"{d:N0} ₽") : "Самовывоз";
+        DelL.Text = Delivery.IsChecked ? (d == 0 ? "Бесплатно" : $"{d:N0} ₽") : "Самовывоз";
         TotalL.Text = $"{total:N0} ₽";
-        BtnSum.Text = $"{total:N0} ₽";
+        ConfirmSum.Text = TotalL.Text;
+        var eta = DateTime.Now.AddDays(Delivery.IsChecked ? 3 : 1);
+        ItemsL.Text = Delivery.IsChecked ? $"{eta:d MMMM}, {(d == 0 ? "0 ₽" : $"{d:N0} ₽")}" : $"Завтра, {eta:d MMMM}, 0 ₽";
         BonusL.Text = $"Вы получите {total * 5 / 100:N0} бонусов";
-        var eta = DateTime.Now.AddDays(delivery ? 3 : 1);
-        var price = d == 0 ? "0 ₽" : $"{d:N0} ₽";
-        DateL.Text = delivery ? $"Курьером до {eta:dd.MM}, {price}" : $"Завтра, {eta:dd.MM}, 0 ₽";
     }
 
-    async void OnConfirm(object? s, TappedEventArgs e)
+    void OnMethod(object? s, CheckedChangedEventArgs e)
+    {
+        if (!ready) return;
+        AddrBox.IsVisible = Delivery.IsChecked; PickBox.IsVisible = !Delivery.IsChecked;
+        if (!Delivery.IsChecked) SuggestBox.IsVisible = false;
+        UpdateTotals();
+    }
+
+    // Подсказки: список регионов России при вводе адреса
+    void OnAddrChanged(object? s, TextChangedEventArgs e)
+    {
+        if (!ready || suppress) return;
+        AddrField.Stroke = Color.FromArgb("#262B35");
+        var text = e.NewTextValue ?? "";
+        var found = text.Contains(',') ? new List<string>() : Regions.Find(text);
+        if (found.Count == 1 && found[0].Equals(text.Trim(), StringComparison.OrdinalIgnoreCase)) found.Clear();
+        BindableLayout.SetItemsSource(SuggestList, found);
+        SuggestBox.IsVisible = found.Count > 0;
+    }
+
+    void OnPickRegion(object? s, TappedEventArgs e)
+    {
+        if (s is not Label l || string.IsNullOrEmpty(l.Text)) return;
+        suppress = true;
+        Address.Text = l.Text + ", ";
+        suppress = false;
+        SuggestBox.IsVisible = false;
+        Address.Focus();
+        Address.CursorPosition = Address.Text.Length;
+    }
+
+    async void OnConfirm(object? s, EventArgs e)
     {
         var digits = new string((Phone.Text ?? "").Where(char.IsDigit).ToArray());
-        if (lines.Count == 0) { Err.Text = "Не выбраны товары в корзине"; return; }
-        if (delivery)
-        {
-            // адрес доставки обязателен: пустой (или только регион без города/улицы) не пропускаем
-            var addrErr = Regions.CheckAddress(Address.Text);
-            if (addrErr != null)
-            {
-                Address.ShowError = true; AddrErr.Text = addrErr; Err.Text = addrErr;
-                Address.FocusField();
-                return;
-            }
-        }
+        if (lines.Count == 0) { Err.Text = "Корзина пуста"; return; }
         if (string.IsNullOrWhiteSpace(NameE.Text)) { Err.Text = "Введите имя"; return; }
         if (digits.Length < 10) { Err.Text = "Введите корректный телефон"; return; }
-        Err.Text = ""; AddrErr.Text = "";
+        if (Delivery.IsChecked)
+        {
+            var a = (Address.Text ?? "").Trim().TrimEnd(',', ' ');
+            if (a.Length == 0) { AddrField.Stroke = Color.FromArgb("#FF6B6B"); Err.Text = "Введите адрес доставки"; return; }
+            var parts = a.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            if (a.Length < 10 || parts.Length < 2) { AddrField.Stroke = Color.FromArgb("#FF6B6B"); Err.Text = "Укажите полный адрес: регион, город, улица, дом"; return; }
+        }
+        Err.Text = "";
         var o = new Order
         {
             Name = NameE.Text.Trim(), Phone = Phone.Text!.Trim(),
-            Method = delivery ? "Доставка" : "Самовывоз",
-            Address = delivery ? Address.Text.Trim() : "",
-            Payment = payNow ? "Картой онлайн" : "При получении",
+            Method = Delivery.IsChecked ? "Доставка" : "Самовывоз",
+            Address = Delivery.IsChecked ? Address.Text!.Trim() : "",
+            Payment = PayCard.IsChecked ? "Картой онлайн" : "При получении",
             Comment = Comment.Text?.Trim() ?? "",
             Subtotal = subtotal, Discount = discount, BonusUsed = BonusUsed, Delivery = DeliveryCost,
             Total = subtotal - discount - BonusUsed + DeliveryCost, Created = DateTime.Now
@@ -115,10 +104,10 @@ public partial class CheckoutPage : ContentPage
         if (RememberSw.IsToggled)
         {
             Store.ProfileName = o.Name; Store.ProfilePhone = o.Phone;
-            if (delivery) Store.ProfileAddress = o.Address;
+            if (Delivery.IsChecked) Store.ProfileAddress = o.Address;
         }
         var id = await Store.PlaceOrder(o, lines);
-        Form.IsVisible = false; BottomBar.IsVisible = false; Done.IsVisible = true;
+        Form.IsVisible = false; ConfirmBar.IsVisible = false; Done.IsVisible = true;
         DoneL.Text = $"Заказ №{id} оформлен!";
         DoneInfo.Text = o.IsDelivery
             ? $"Курьер привезёт заказ {o.Eta:dd.MM.yyyy}.\nСледить за доставкой можно в профиле."

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:local="clr-namespace:Athlet" x:Class="Athlet.ProfilePage" Title="Профиль">
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="Athlet.ProfilePage" Title="Профиль">
   <ScrollView>
     <VerticalStackLayout Padding="16,10,16,28" Spacing="14">
 
@@ -63,7 +63,7 @@
       <Label Text="Мои данные" Style="{StaticResource H2}" Margin="0,6,0,0"/>
       <Border Style="{StaticResource Field}" HeightRequest="52"><Entry x:Name="NameE" Placeholder="Имя"/></Border>
       <Border Style="{StaticResource Field}" HeightRequest="52"><Entry x:Name="PhoneE" Placeholder="Телефон" Keyboard="Telephone"/></Border>
-      <local:AddressField x:Name="AddrE" Placeholder="Адрес доставки по умолчанию"/>
+      <Border Style="{StaticResource Field}" HeightRequest="52"><Entry x:Name="AddrE" Placeholder="Адрес доставки по умолчанию"/></Border>
       <Button x:Name="SaveBtn" Text="Сохранить" Style="{StaticResource Btn}" Clicked="OnSave"/>
 
       <Border Style="{StaticResource CardBox}" Padding="14">

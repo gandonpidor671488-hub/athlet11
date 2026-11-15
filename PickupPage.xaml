@@ -64,13 +64,7 @@
       <Label x:Name="MsgL" TextColor="{StaticResource Good}" FontFamily="InterBold" HorizontalOptions="Center"/>
       <Button x:Name="GotBtn" Text="Я получил заказ" Style="{StaticResource Btn}" Margin="12,0" Clicked="OnGot"/>
 
-      <!-- Следующий заказ -->
-      <VerticalStackLayout Spacing="10" Margin="12,8,12,0">
-        <Label Text="Добавьте в следующий заказ" Style="{StaticResource H1}" FontSize="22"/>
-        <ScrollView Orientation="Horizontal" HorizontalScrollBarVisibility="Never">
-          <HorizontalStackLayout x:Name="UpsellList" BindableLayout.ItemTemplate="{StaticResource ProductTile}"/>
-        </ScrollView>
-      </VerticalStackLayout>
+      
     </VerticalStackLayout>
   </ScrollView>
 </ContentPage>

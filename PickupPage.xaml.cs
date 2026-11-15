@@ -25,7 +25,6 @@ public partial class PickupPage : ContentPage, IQueryAttributable
         TotalL.Text = order.TotalText;
         LeftL.Text = $"{order.StorageText} · {order.StorageLeftText}";
         BindableLayout.SetItemsSource(LinesList, await Store.OrderLines(order));
-        BindableLayout.SetItemsSource(UpsellList, await Store.Upsell());
         GotBtn.IsVisible = !order.Received;
         MsgL.Text = order.Received ? "Заказ получен. Спасибо за покупку!" : "";
     }

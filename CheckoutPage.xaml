@@ -1,55 +1,62 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:local="clr-namespace:Athlet" x:Class="Athlet.CheckoutPage" Title="Оформление заказа">
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="Athlet.CheckoutPage" Title="Оформление заказа">
   <Grid RowDefinitions="*,Auto">
     <ScrollView>
-      <Grid Padding="16,4,16,16">
+      <Grid Padding="12,8,12,16">
         <VerticalStackLayout x:Name="Form" Spacing="12">
 
-          <Label x:Name="SubHead" Style="{StaticResource MutedText}" FontSize="14"/>
-
-          <!-- Получение: Пункт выдачи / Курьер -->
-          <Border Style="{StaticResource CardBox}" Padding="12">
+          <!-- Способ получения -->
+          <Border Style="{StaticResource CardBox}" Padding="14" StrokeShape="RoundRectangle 26">
             <VerticalStackLayout Spacing="12">
-              <Border BackgroundColor="{StaticResource Card2}" Stroke="{StaticResource Line}" StrokeThickness="1" StrokeShape="RoundRectangle 22" Padding="4">
+              <Border BackgroundColor="#000000" Stroke="{StaticResource Line}" StrokeThickness="1" StrokeShape="RoundRectangle 22" Padding="4">
                 <Grid ColumnDefinitions="*,*" ColumnSpacing="4">
-                  <Border x:Name="SegPickup" HeightRequest="44" Padding="0" StrokeShape="RoundRectangle 18" Stroke="Transparent">
-                    <Label x:Name="SegPickupL" Text="Пункт выдачи" FontFamily="InterBold" FontSize="15" HorizontalOptions="Center" VerticalOptions="Center"/>
-                    <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnSegPickup"/></Border.GestureRecognizers>
-                  </Border>
-                  <Border x:Name="SegCourier" Grid.Column="1" HeightRequest="44" Padding="0" StrokeShape="RoundRectangle 18" Stroke="Transparent">
-                    <Label x:Name="SegCourierL" Text="Курьер" FontFamily="InterBold" FontSize="15" HorizontalOptions="Center" VerticalOptions="Center"/>
-                    <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnSegCourier"/></Border.GestureRecognizers>
-                  </Border>
+                  <RadioButton x:Name="Pickup" GroupName="m" IsChecked="True" ControlTemplate="{StaticResource SegTemplate}" CheckedChanged="OnMethod">
+                    <RadioButton.Content><Label Text="Пункт выдачи" FontFamily="InterBold" FontSize="15"/></RadioButton.Content>
+                  </RadioButton>
+                  <RadioButton x:Name="Delivery" Grid.Column="1" GroupName="m" ControlTemplate="{StaticResource SegTemplate}" CheckedChanged="OnMethod">
+                    <RadioButton.Content><Label Text="Курьер" FontFamily="InterBold" FontSize="15"/></RadioButton.Content>
+                  </RadioButton>
                 </Grid>
               </Border>
 
-              <!-- адрес пункта выдачи -->
-              <Grid x:Name="PickupAddr" ColumnDefinitions="Auto,*" ColumnSpacing="12">
-                <Label Text="📍" FontSize="22" VerticalOptions="Center"/>
-                <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
-                  <Label Text="ул. Спортивная, 10" FontFamily="InterBold" FontSize="16"/>
-                  <Label Text="Пункт выдачи ATHLET · бесплатно" Style="{StaticResource MutedText}" FontSize="12"/>
+              <Grid x:Name="PickBox" ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                <Label Text="📍" FontSize="20" VerticalOptions="Center"/>
+                <VerticalStackLayout Grid.Column="1" Spacing="1">
+                  <Label Text="ул. Спортивная, 10" Style="{StaticResource Bold}" FontSize="15"/>
+                  <Label Text="Пункт выдачи ATHLET · ежедневно 9:00–21:00" Style="{StaticResource MutedText}" FontSize="12"/>
                 </VerticalStackLayout>
               </Grid>
 
-              <!-- адрес доставки курьером: подсказки регионов России, пустым оставить нельзя -->
-              <VerticalStackLayout x:Name="AddrBox" Spacing="6" IsVisible="False">
-                <local:AddressField x:Name="Address" Placeholder="Адрес доставки: регион, город, улица, дом"/>
-                <Label x:Name="AddrErr" TextColor="{StaticResource Danger}" FontSize="12"/>
+              <VerticalStackLayout x:Name="AddrBox" IsVisible="False" Spacing="6">
+                <Border x:Name="AddrField" Style="{StaticResource Field}" StrokeShape="RoundRectangle 20" HeightRequest="52">
+                  <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                    <Label Text="📍" FontSize="18" VerticalOptions="Center"/>
+                    <Entry x:Name="Address" Grid.Column="1" Placeholder="Регион, город, улица, дом, квартира" TextChanged="OnAddrChanged"/>
+                  </Grid>
+                </Border>
+                <Border x:Name="SuggestBox" IsVisible="False" Style="{StaticResource CardBox}" StrokeShape="RoundRectangle 18" Padding="4">
+                  <VerticalStackLayout x:Name="SuggestList" Spacing="0">
+                    <BindableLayout.ItemTemplate>
+                      <DataTemplate>
+                        <Label Text="{Binding .}" FontSize="15" Padding="14,11">
+                          <Label.GestureRecognizers><TapGestureRecognizer Tapped="OnPickRegion"/></Label.GestureRecognizers>
+                        </Label>
+                      </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                  </VerticalStackLayout>
+                </Border>
               </VerticalStackLayout>
 
               <BoxView HeightRequest="1" Color="{StaticResource Line}"/>
-
-              <!-- дата и товары -->
               <Grid ColumnDefinitions="*,Auto">
-                <Label x:Name="DateL" FontFamily="InterBold" FontSize="16" VerticalOptions="Center"/>
+                <Label x:Name="ItemsL" Style="{StaticResource Bold}" FontSize="17"/>
                 <Label x:Name="CountL" Grid.Column="1" Style="{StaticResource MutedText}" VerticalOptions="Center"/>
               </Grid>
               <ScrollView Orientation="Horizontal" HorizontalScrollBarVisibility="Never">
                 <HorizontalStackLayout x:Name="Thumbs" Spacing="8">
                   <BindableLayout.ItemTemplate>
                     <DataTemplate>
-                      <Border WidthRequest="64" HeightRequest="64" Padding="0" StrokeShape="RoundRectangle 12" Stroke="{StaticResource Line}" StrokeThickness="1">
+                      <Border WidthRequest="64" HeightRequest="76" Padding="0" StrokeShape="RoundRectangle 14" Stroke="{StaticResource Line}" StrokeThickness="1">
                         <Grid>
                           <Image Source="{Binding P.ImageSrc}" Aspect="AspectFill"/>
                           <Image Source="{Binding P.RemoteSrc}" Aspect="AspectFill"/>
@@ -62,34 +69,39 @@
             </VerticalStackLayout>
           </Border>
 
-          <!-- Как оплатить заказ? -->
-          <Label Text="Как оплатить заказ?" Style="{StaticResource H2}" Margin="0,6,0,0"/>
-          <HorizontalStackLayout Spacing="10">
-            <Border x:Name="PayNowB" Padding="22,12" StrokeShape="RoundRectangle 18" StrokeThickness="2">
-              <Label x:Name="PayNowL" Text="Сразу" FontSize="16"/>
-              <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnPayNow"/></Border.GestureRecognizers>
-            </Border>
-            <Border x:Name="PayLaterB" Padding="22,12" StrokeShape="RoundRectangle 18" StrokeThickness="2">
-              <Label x:Name="PayLaterL" Text="При получении" FontSize="16"/>
-              <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnPayLater"/></Border.GestureRecognizers>
-            </Border>
-          </HorizontalStackLayout>
-          <Label x:Name="PayHint" Style="{StaticResource MutedText}" FontSize="12"/>
-
-          <Border Style="{StaticResource CardBox}" Padding="14">
-            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
-              <VerticalStackLayout Spacing="2" VerticalOptions="Center">
-                <Label Text="Списать бонусы" Style="{StaticResource Bold}"/>
-                <Label x:Name="BonusInfo" Style="{StaticResource MutedText}" FontSize="12"/>
-              </VerticalStackLayout>
-              <Switch x:Name="BonusSw" Grid.Column="1" OnColor="{StaticResource Accent}" VerticalOptions="Center" Toggled="OnBonus"/>
-            </Grid>
+          <!-- Контакты -->
+          <Border Style="{StaticResource CardBox}" Padding="14" StrokeShape="RoundRectangle 26">
+            <VerticalStackLayout Spacing="10">
+              <Label Text="Получатель" Style="{StaticResource H2}"/>
+              <Border Style="{StaticResource Field}" StrokeShape="RoundRectangle 22" HeightRequest="52"><Entry x:Name="NameE" Placeholder="Ваше имя"/></Border>
+              <Border Style="{StaticResource Field}" StrokeShape="RoundRectangle 22" HeightRequest="52"><Entry x:Name="Phone" Placeholder="Телефон" Keyboard="Telephone"/></Border>
+            </VerticalStackLayout>
           </Border>
 
-          <Label Text="Контакты" Style="{StaticResource H2}" Margin="0,6,0,0"/>
-          <Border Style="{StaticResource Field}" StrokeShape="RoundRectangle 26" HeightRequest="52"><Entry x:Name="NameE" Placeholder="Ваше имя"/></Border>
-          <Border Style="{StaticResource Field}" StrokeShape="RoundRectangle 26" HeightRequest="52"><Entry x:Name="Phone" Placeholder="Телефон" Keyboard="Telephone"/></Border>
-          <Border Style="{StaticResource Field}" HeightRequest="90"><Editor x:Name="Comment" Placeholder="Комментарий к заказу" AutoSize="TextChanges"/></Border>
+          <!-- Оплата -->
+          <Border Style="{StaticResource CardBox}" Padding="14" StrokeShape="RoundRectangle 26">
+            <VerticalStackLayout Spacing="12">
+              <Label Text="Как оплатить заказ?" Style="{StaticResource H2}"/>
+              <HorizontalStackLayout Spacing="10">
+                <RadioButton x:Name="PayCash" GroupName="p" IsChecked="True" ControlTemplate="{StaticResource PillTemplate}">
+                  <RadioButton.Content><Label Text="При получении" FontFamily="InterBold" FontSize="15"/></RadioButton.Content>
+                </RadioButton>
+                <RadioButton x:Name="PayCard" GroupName="p" ControlTemplate="{StaticResource PillTemplate}">
+                  <RadioButton.Content><Label Text="Картой онлайн (демо)" FontFamily="InterBold" FontSize="15"/></RadioButton.Content>
+                </RadioButton>
+              </HorizontalStackLayout>
+
+              <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                <VerticalStackLayout Spacing="2" VerticalOptions="Center">
+                  <Label Text="Списать бонусы" Style="{StaticResource Bold}" FontSize="16"/>
+                  <Label x:Name="BonusInfo" Style="{StaticResource MutedText}" FontSize="12"/>
+                </VerticalStackLayout>
+                <Switch x:Name="BonusSw" Grid.Column="1" OnColor="{StaticResource Accent}" VerticalOptions="Center" Toggled="OnBonus"/>
+              </Grid>
+            </VerticalStackLayout>
+          </Border>
+
+          <Border Style="{StaticResource Field}" StrokeShape="RoundRectangle 22" HeightRequest="90"><Editor x:Name="Comment" Placeholder="Комментарий к заказу" AutoSize="TextChanges"/></Border>
 
           <HorizontalStackLayout Spacing="10">
             <Switch x:Name="RememberSw" IsToggled="True" OnColor="{StaticResource Accent}" VerticalOptions="Center"/>
@@ -97,9 +109,8 @@
           </HorizontalStackLayout>
 
           <!-- Итого -->
-          <Border Style="{StaticResource CardBox}">
+          <Border Style="{StaticResource CardBox}" Padding="14" StrokeShape="RoundRectangle 26">
             <VerticalStackLayout Spacing="8">
-              <Label Text="Ваш заказ" Style="{StaticResource H2}"/>
               <Grid ColumnDefinitions="*,Auto"><Label Text="Товары" Style="{StaticResource MutedText}"/><Label x:Name="SubL" Grid.Column="1"/></Grid>
               <Grid x:Name="DiscRow" ColumnDefinitions="*,Auto"><Label Text="Скидка" Style="{StaticResource MutedText}"/><Label x:Name="DiscL" Grid.Column="1" TextColor="{StaticResource Good}"/></Grid>
               <Grid x:Name="BonusRow" ColumnDefinitions="*,Auto"><Label Text="Оплачено бонусами" Style="{StaticResource MutedText}"/><Label x:Name="BonusL2" Grid.Column="1" TextColor="{StaticResource Good}"/></Grid>
@@ -108,6 +119,8 @@
               <Label x:Name="BonusL" Style="{StaticResource MutedText}" FontSize="12"/>
             </VerticalStackLayout>
           </Border>
+
+          <Label x:Name="Err" TextColor="{StaticResource Danger}" FontFamily="InterBold"/>
         </VerticalStackLayout>
 
         <VerticalStackLayout x:Name="Done" IsVisible="False" Spacing="14" VerticalOptions="Center" Margin="0,70">
@@ -120,18 +133,10 @@
       </Grid>
     </ScrollView>
 
-    <!-- Нижняя оранжевая кнопка -->
-    <Border x:Name="BottomBar" Grid.Row="1" BackgroundColor="{StaticResource Dark}" Stroke="Transparent" Padding="14,6,14,12">
-      <VerticalStackLayout Spacing="6">
-        <Label x:Name="Err" TextColor="{StaticResource Danger}" HorizontalTextAlignment="Center" FontSize="13"/>
-        <Border HeightRequest="56" Padding="22,0" StrokeShape="RoundRectangle 28" Stroke="Transparent" Background="{StaticResource HeroBrush}">
-          <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
-            <Label Text="Подтвердить заказ" FontFamily="InterBold" FontSize="17" VerticalOptions="Center"/>
-            <Label x:Name="BtnSum" Grid.Column="1" FontFamily="InterBold" FontSize="17" VerticalOptions="Center"/>
-          </Grid>
-          <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnConfirm"/></Border.GestureRecognizers>
-        </Border>
-      </VerticalStackLayout>
-    </Border>
+    <Grid x:Name="ConfirmBar" Grid.Row="1" Padding="12,8,12,12" BackgroundColor="{StaticResource Dark}">
+      <Button x:Name="ConfirmBtn" Style="{StaticResource Btn}" HeightRequest="58" CornerRadius="29" Clicked="OnConfirm"/>
+      <Label Text="Подтвердить заказ" FontFamily="InterBold" FontSize="17" VerticalOptions="Center" Margin="26,0,0,0" InputTransparent="True"/>
+      <Label x:Name="ConfirmSum" FontFamily="InterBold" FontSize="17" VerticalOptions="Center" HorizontalOptions="End" Margin="0,0,26,0" InputTransparent="True"/>
+    </Grid>
   </Grid>
 </ContentPage>
