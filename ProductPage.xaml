@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="Athlet.ProductPage">
+  <Grid RowDefinitions="*,Auto">
+    <ScrollView x:Name="Scroller">
+      <VerticalStackLayout Spacing="0" Padding="0,0,0,24">
+
+        <!-- Фото -->
+        <Grid HeightRequest="380" BackgroundColor="{StaticResource Card}">
+          <Image x:Name="Photo" Aspect="AspectFill"/>
+          <Image x:Name="PhotoWeb" Aspect="AspectFill"/>
+          <BoxView Background="{StaticResource FadeBrush}" VerticalOptions="End" HeightRequest="120"/>
+          <Border x:Name="DiscBadge" BackgroundColor="{StaticResource Good}" HorizontalOptions="Start" VerticalOptions="Start" Margin="16" Padding="10,4" StrokeShape="RoundRectangle 10" Stroke="Transparent">
+            <Label x:Name="DiscL" Style="{StaticResource Bold}" FontSize="14" TextColor="#0E1014"/>
+          </Border>
+          <Border WidthRequest="48" HeightRequest="48" StrokeShape="RoundRectangle 24" Stroke="Transparent" BackgroundColor="{StaticResource Glass}" HorizontalOptions="End" VerticalOptions="Start" Margin="16,16,72,16">
+            <Label Text="↗" FontSize="24" HorizontalOptions="Center" VerticalOptions="Center"/>
+            <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnShare"/></Border.GestureRecognizers>
+          </Border>
+          <Border WidthRequest="48" HeightRequest="48" StrokeShape="RoundRectangle 24" Stroke="Transparent" BackgroundColor="{StaticResource Glass}" HorizontalOptions="End" VerticalOptions="Start" Margin="16">
+            <Label x:Name="FavBtn" Text="♡" FontSize="28" HorizontalOptions="Center" VerticalOptions="Center"/>
+            <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnFav"/></Border.GestureRecognizers>
+          </Border>
+        </Grid>
+
+        <Border Margin="0,-28,0,0" Padding="16,22,16,0" BackgroundColor="{StaticResource Dark}" Stroke="Transparent" StrokeShape="RoundRectangle 28,28,0,0">
+        <VerticalStackLayout Spacing="16">
+          <VerticalStackLayout Spacing="4">
+            <Label x:Name="BrandL" Style="{StaticResource MutedText}" CharacterSpacing="2"/>
+            <Label x:Name="NameL" Style="{StaticResource H1}"/>
+            <HorizontalStackLayout Spacing="10">
+              <Label x:Name="RatingL" TextColor="{StaticResource Gold}" FontFamily="InterBold"/>
+              <Label x:Name="ReviewsL" Style="{StaticResource MutedText}"/>
+              <Label x:Name="WeightL" Style="{StaticResource MutedText}"/>
+            </HorizontalStackLayout>
+          </VerticalStackLayout>
+
+          <HorizontalStackLayout Spacing="10">
+            <Label x:Name="PriceL" Style="{StaticResource H1}" TextColor="{StaticResource Accent}" FontSize="30"/>
+            <Label x:Name="OldL" Style="{StaticResource OldPrice}" FontSize="16" VerticalOptions="End"/>
+            <Label x:Name="SaveL" Style="{StaticResource Bold}" FontSize="13" TextColor="{StaticResource Good}" VerticalOptions="End"/>
+          </HorizontalStackLayout>
+
+          <Border Style="{StaticResource CardBox}" Padding="14">
+            <VerticalStackLayout Spacing="6">
+              <Label Text="● В наличии" TextColor="{StaticResource Good}" FontFamily="InterBold" FontSize="14"/>
+              <Label Text="🚚 Курьером за 3 дня: 300 ₽, бесплатно от 5 000 ₽" Style="{StaticResource MutedText}" FontSize="13"/>
+              <Label Text="🏬 Самовывоз завтра: бесплатно" Style="{StaticResource MutedText}" FontSize="13"/>
+            </VerticalStackLayout>
+          </Border>
+
+          <!-- Вкус -->
+          <VerticalStackLayout x:Name="FlavorBox" Spacing="8">
+            <Label Text="Вкус" Style="{StaticResource H2}"/>
+            <CollectionView x:Name="Flavors" HeightRequest="44" SelectionMode="Single" ItemTemplate="{StaticResource Chip}">
+              <CollectionView.ItemsLayout><LinearItemsLayout Orientation="Horizontal" ItemSpacing="8"/></CollectionView.ItemsLayout>
+            </CollectionView>
+          </VerticalStackLayout>
+
+          <!-- Пищевая ценность -->
+          <Border x:Name="NutriBox" Style="{StaticResource CardBox}">
+            <VerticalStackLayout Spacing="10">
+              <Label x:Name="NutriTitle" Style="{StaticResource Bold}" FontSize="15"/>
+              <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="6">
+                <VerticalStackLayout HorizontalOptions="Center"><Label x:Name="KcalL" Style="{StaticResource H2}" TextColor="{StaticResource Accent}" HorizontalOptions="Center"/><Label Text="Ккал" Style="{StaticResource MutedText}" HorizontalOptions="Center"/></VerticalStackLayout>
+                <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center"><Label x:Name="ProtL" Style="{StaticResource H2}" TextColor="#4DA3FF" HorizontalOptions="Center"/><Label Text="Белки, г" Style="{StaticResource MutedText}" HorizontalOptions="Center"/></VerticalStackLayout>
+                <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center"><Label x:Name="FatL" Style="{StaticResource H2}" TextColor="{StaticResource Gold}" HorizontalOptions="Center"/><Label Text="Жиры, г" Style="{StaticResource MutedText}" HorizontalOptions="Center"/></VerticalStackLayout>
+                <VerticalStackLayout Grid.Column="3" HorizontalOptions="Center"><Label x:Name="CarbL" Style="{StaticResource H2}" TextColor="{StaticResource Good}" HorizontalOptions="Center"/><Label Text="Углев., г" Style="{StaticResource MutedText}" HorizontalOptions="Center"/></VerticalStackLayout>
+              </Grid>
+            </VerticalStackLayout>
+          </Border>
+
+          <VerticalStackLayout Spacing="6">
+            <Label Text="Описание" Style="{StaticResource H2}"/>
+            <Label x:Name="DescL" Style="{StaticResource MutedText}" FontSize="14"/>
+          </VerticalStackLayout>
+          <VerticalStackLayout Spacing="6">
+            <Label Text="Состав" Style="{StaticResource H2}"/>
+            <Label x:Name="CompL" Style="{StaticResource MutedText}" FontSize="14"/>
+          </VerticalStackLayout>
+
+          <!-- Отзывы -->
+          <VerticalStackLayout Spacing="10">
+            <Label x:Name="RevTitle" Text="Отзывы" Style="{StaticResource H2}"/>
+            <VerticalStackLayout x:Name="RevList" Spacing="8">
+              <BindableLayout.ItemTemplate>
+                <DataTemplate>
+                  <Border Style="{StaticResource CardBox}" Padding="14">
+                    <VerticalStackLayout Spacing="4">
+                      <Grid ColumnDefinitions="*,Auto">
+                        <Label Text="{Binding Author}" Style="{StaticResource Bold}"/>
+                        <Label Grid.Column="1" Text="{Binding DateText}" Style="{StaticResource MutedText}" FontSize="12"/>
+                      </Grid>
+                      <Label Text="{Binding StarsText}" TextColor="{StaticResource Gold}"/>
+                      <Label Text="{Binding Text}" Style="{StaticResource MutedText}" FontSize="14"/>
+                    </VerticalStackLayout>
+                  </Border>
+                </DataTemplate>
+              </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
+
+            <Border Style="{StaticResource CardBox}" Padding="14">
+              <VerticalStackLayout Spacing="8">
+                <Label Text="Оставить отзыв" Style="{StaticResource Bold}"/>
+                <Border Style="{StaticResource Field}" BackgroundColor="{StaticResource Card2}" HeightRequest="46"><Picker x:Name="StarsPicker" Title="Оценка"/></Border>
+                <Border Style="{StaticResource Field}" BackgroundColor="{StaticResource Card2}" HeightRequest="46"><Entry x:Name="RevText" Placeholder="Ваш комментарий"/></Border>
+                <Label x:Name="RevMsg" Style="{StaticResource MutedText}"/>
+                <Button Text="Отправить отзыв" Style="{StaticResource Ghost}" Clicked="OnReview"/>
+              </VerticalStackLayout>
+            </Border>
+          </VerticalStackLayout>
+
+          <!-- Фото по ссылке -->
+          <Border Style="{StaticResource CardBox}" Padding="14">
+            <VerticalStackLayout Spacing="8">
+              <Label Text="Своё фото товара (ссылка из интернета)" Style="{StaticResource Bold}" FontSize="14"/>
+              <Border Style="{StaticResource Field}" BackgroundColor="{StaticResource Card2}" HeightRequest="46"><Entry x:Name="UrlE" Placeholder="https://…/photo.jpg" Keyboard="Url"/></Border>
+              <Button Text="Применить фото" Style="{StaticResource Ghost}" Clicked="OnUrl"/>
+            </VerticalStackLayout>
+          </Border>
+
+          <!-- Похожие -->
+          <VerticalStackLayout Spacing="10">
+            <Label Text="Похожие товары" Style="{StaticResource H2}"/>
+            <CollectionView x:Name="Similar" HeightRequest="322" ItemTemplate="{StaticResource ProductTile}">
+              <CollectionView.ItemsLayout><LinearItemsLayout Orientation="Horizontal"/></CollectionView.ItemsLayout>
+            </CollectionView>
+          </VerticalStackLayout>
+        </VerticalStackLayout>
+        </Border>
+      </VerticalStackLayout>
+    </ScrollView>
+
+    <!-- Нижняя панель покупки -->
+    <Border Grid.Row="1" BackgroundColor="{StaticResource Card}" Stroke="{StaticResource Line}" StrokeThickness="1" StrokeShape="RoundRectangle 28,28,0,0" Padding="16,12,16,14">
+      <Grid ColumnDefinitions="Auto,*" ColumnSpacing="14">
+        <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
+          <Button Text="−" Style="{StaticResource Mini}" Clicked="OnMinus"/>
+          <Label x:Name="QtyL" Text="1" FontFamily="InterBold" FontSize="18" VerticalOptions="Center" WidthRequest="22" HorizontalTextAlignment="Center"/>
+          <Button Text="+" Style="{StaticResource Mini}" Clicked="OnPlus"/>
+        </HorizontalStackLayout>
+        <Button x:Name="BuyBtn" Grid.Column="1" Style="{StaticResource Btn}" Clicked="OnAdd"/>
+      </Grid>
+    </Border>
+  </Grid>
+</ContentPage>

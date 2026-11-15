@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:local="clr-namespace:Athlet" x:Class="Athlet.ProfilePage" Title="Профиль">
+  <ScrollView>
+    <VerticalStackLayout Padding="16,10,16,28" Spacing="14">
+
+      <Border Padding="20" StrokeShape="RoundRectangle 30" Stroke="Transparent" Background="{StaticResource HeroBrush}">
+        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="14">
+          <Border WidthRequest="64" HeightRequest="64" StrokeShape="RoundRectangle 32" Stroke="Transparent" BackgroundColor="#0A0C10">
+            <Label x:Name="Initial" Style="{StaticResource H1}" HorizontalOptions="Center" VerticalOptions="Center"/>
+          </Border>
+          <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
+            <Label x:Name="WhoL" Style="{StaticResource H2}" FontSize="20"/>
+            <Label x:Name="PhoneL" TextColor="#FFE9DD" FontSize="13"/>
+          </VerticalStackLayout>
+        </Grid>
+      </Border>
+
+      <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
+        <Border Style="{StaticResource CardBox}" Padding="10"><VerticalStackLayout><Label x:Name="OrdersN" Style="{StaticResource H1}" FontSize="22" HorizontalOptions="Center"/><Label Text="Заказов" Style="{StaticResource MutedText}" HorizontalOptions="Center" FontSize="12"/></VerticalStackLayout></Border>
+        <Border Grid.Column="1" Style="{StaticResource CardBox}" Padding="10"><VerticalStackLayout><Label x:Name="SpentN" Style="{StaticResource H1}" FontSize="22" HorizontalOptions="Center"/><Label Text="Потрачено" Style="{StaticResource MutedText}" HorizontalOptions="Center" FontSize="12"/></VerticalStackLayout></Border>
+        <Border Grid.Column="2" Style="{StaticResource CardBox}" Padding="10"><VerticalStackLayout><Label x:Name="BonusN" Style="{StaticResource H1}" FontSize="22" TextColor="{StaticResource Gold}" HorizontalOptions="Center"/><Label Text="Бонусов (1 = 1 ₽)" Style="{StaticResource MutedText}" HorizontalOptions="Center" FontSize="12"/></VerticalStackLayout></Border>
+      </Grid>
+
+      <!-- Активный заказ -->
+      <Border x:Name="ActiveBox" Style="{StaticResource CardBox}" IsVisible="False">
+        <VerticalStackLayout Spacing="10">
+          <Grid ColumnDefinitions="*,Auto">
+            <Label Text="Текущий заказ" Style="{StaticResource H2}"/>
+            <Label x:Name="ActTitle" Grid.Column="1" Style="{StaticResource MutedText}" VerticalOptions="Center"/>
+          </Grid>
+          <Grid ColumnDefinitions="Auto,*" ColumnSpacing="14">
+            <Border WidthRequest="72" HeightRequest="72" StrokeShape="RoundRectangle 20" Stroke="Transparent" BackgroundColor="{StaticResource Card2}">
+              <VerticalStackLayout VerticalOptions="Center" Spacing="0">
+                <Label x:Name="ActNum" Style="{StaticResource H1}" FontSize="28" TextColor="{StaticResource Accent}" HorizontalOptions="Center"/>
+                <Label x:Name="ActCap" Style="{StaticResource MutedText}" FontSize="12" HorizontalOptions="Center"/>
+              </VerticalStackLayout>
+            </Border>
+            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="3">
+              <Label x:Name="ActDays" Style="{StaticResource Bold}" FontSize="15"/>
+              <Label x:Name="ActStatus" Style="{StaticResource MutedText}" FontSize="12"/>
+            </VerticalStackLayout>
+          </Grid>
+          <ProgressBar x:Name="ActBar" ProgressColor="{StaticResource Accent}"/>
+          <Button Text="Подробнее об отслеживании" Style="{StaticResource Ghost}" Clicked="OnOrders"/>
+        </VerticalStackLayout>
+      </Border>
+
+      <Border Style="{StaticResource CardBox}" Padding="14">
+        <Grid ColumnDefinitions="*,Auto">
+          <Label Text="Мои заказы и отслеживание" Style="{StaticResource Bold}" VerticalOptions="Center"/>
+          <Label Grid.Column="1" Text="›" FontSize="24" TextColor="{StaticResource Muted}"/>
+          <Grid.GestureRecognizers><TapGestureRecognizer Tapped="OnOrdersTap"/></Grid.GestureRecognizers>
+        </Grid>
+      </Border>
+      <Border Style="{StaticResource CardBox}" Padding="14">
+        <Grid ColumnDefinitions="*,Auto">
+          <Label Text="О магазине и контакты" Style="{StaticResource Bold}" VerticalOptions="Center"/>
+          <Label Grid.Column="1" Text="›" FontSize="24" TextColor="{StaticResource Muted}"/>
+          <Grid.GestureRecognizers><TapGestureRecognizer Tapped="OnInfoTap"/></Grid.GestureRecognizers>
+        </Grid>
+      </Border>
+
+      <Label Text="Мои данные" Style="{StaticResource H2}" Margin="0,6,0,0"/>
+      <Border Style="{StaticResource Field}" HeightRequest="52"><Entry x:Name="NameE" Placeholder="Имя"/></Border>
+      <Border Style="{StaticResource Field}" HeightRequest="52"><Entry x:Name="PhoneE" Placeholder="Телефон" Keyboard="Telephone"/></Border>
+      <local:AddressField x:Name="AddrE" Placeholder="Адрес доставки по умолчанию"/>
+      <Button x:Name="SaveBtn" Text="Сохранить" Style="{StaticResource Btn}" Clicked="OnSave"/>
+
+      <Border Style="{StaticResource CardBox}" Padding="14">
+        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+          <VerticalStackLayout Spacing="2" VerticalOptions="Center">
+            <Label Text="Фото товаров из интернета" Style="{StaticResource Bold}"/>
+            <Label Text="Если выключить, будут видны только рисованные упаковки" Style="{StaticResource MutedText}" FontSize="12"/>
+          </VerticalStackLayout>
+          <Switch x:Name="WebSw" Grid.Column="1" OnColor="{StaticResource Accent}" VerticalOptions="Center" Toggled="OnWeb"/>
+        </Grid>
+      </Border>
+
+      <Label Text="Промокоды" Style="{StaticResource H2}" Margin="0,10,0,0"/>
+      <Border Style="{StaticResource CardBox}">
+        <VerticalStackLayout Spacing="8">
+          <Label Text="ATHLET10 — −10% на весь заказ" Style="{StaticResource MutedText}" FontSize="14"/>
+          <Label Text="FIT15 — −15% при заказе от 3 000 ₽" Style="{StaticResource MutedText}" FontSize="14"/>
+          <Label Text="WELCOME — −300 ₽ при заказе от 1 500 ₽" Style="{StaticResource MutedText}" FontSize="14"/>
+        </VerticalStackLayout>
+      </Border>
+    </VerticalStackLayout>
+  </ScrollView>
+</ContentPage>

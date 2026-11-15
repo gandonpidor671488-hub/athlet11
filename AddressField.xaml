@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="Athlet.AddressField">
+  <VerticalStackLayout Spacing="6">
+    <Border x:Name="Box" Style="{StaticResource Field}" HeightRequest="52">
+      <Entry x:Name="E" Placeholder="Адрес доставки" TextChanged="OnText" Focused="OnFocus" Unfocused="OnUnfocus"/>
+    </Border>
+    <Border x:Name="ListBox" IsVisible="False" Style="{StaticResource Field}" Padding="0" BackgroundColor="{StaticResource Card2}" StrokeShape="RoundRectangle 16">
+      <ScrollView x:Name="Scroll" HeightRequest="220">
+        <VerticalStackLayout x:Name="Items" Spacing="0"/>
+      </ScrollView>
+    </Border>
+  </VerticalStackLayout>
+</ContentView>

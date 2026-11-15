@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="Athlet.PickupPage" Title="Получить заказ">
+  <ScrollView>
+    <VerticalStackLayout Spacing="14" Padding="0,8,0,28">
+
+      <!-- Штрихкод -->
+      <Border Margin="12,0" Padding="16,16,16,12" StrokeShape="RoundRectangle 28" Stroke="Transparent" BackgroundColor="White">
+        <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnZoom"/></Border.GestureRecognizers>
+        <VerticalStackLayout Spacing="8">
+          <GraphicsView x:Name="Bars" HeightRequest="130"/>
+          <Label x:Name="CodeL" TextColor="#111318" FontFamily="InterBold" FontSize="26" HorizontalOptions="Center"/>
+          <Label x:Name="ZoomL" Text="Нажмите, чтобы увеличить" TextColor="#6B7280" FontSize="13" HorizontalOptions="Center"/>
+        </VerticalStackLayout>
+      </Border>
+
+      <!-- Пункт выдачи и состав -->
+      <Border Margin="12,0" Style="{StaticResource CardBox}" Padding="16">
+        <VerticalStackLayout Spacing="14">
+          <Grid ColumnDefinitions="*,Auto">
+            <VerticalStackLayout Spacing="2">
+              <Label Text="В пункте выдачи ATHLET" Style="{StaticResource H2}"/>
+              <Label Text="ул. Спортивная, 10 · ежедневно 9:00–21:00" Style="{StaticResource MutedText}"/>
+            </VerticalStackLayout>
+            <Border Grid.Column="1" WidthRequest="44" HeightRequest="44" StrokeShape="RoundRectangle 14" Stroke="Transparent" BackgroundColor="{StaticResource Card2}" VerticalOptions="Start">
+              <Label x:Name="Chevron" Text="⌃" FontSize="22" HorizontalOptions="Center" VerticalOptions="Center"/>
+              <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnToggle"/></Border.GestureRecognizers>
+            </Border>
+          </Grid>
+
+          <Border x:Name="LinesBox" Padding="16" StrokeShape="RoundRectangle 18" Stroke="Transparent" BackgroundColor="{StaticResource Card2}">
+            <VerticalStackLayout Spacing="14">
+              <Label x:Name="PayTitle" Style="{StaticResource H2}"/>
+              <VerticalStackLayout x:Name="LinesList" Spacing="14">
+                <BindableLayout.ItemTemplate>
+                  <DataTemplate>
+                    <Grid ColumnDefinitions="72,*" ColumnSpacing="14">
+                      <Border WidthRequest="72" HeightRequest="86" Padding="0" StrokeShape="RoundRectangle 12" Stroke="Transparent" VerticalOptions="Start">
+                        <Grid>
+                          <Image Source="{Binding P.ImageSrc}" Aspect="AspectFill"/>
+                          <Image Source="{Binding P.RemoteSrc}" Aspect="AspectFill"/>
+                        </Grid>
+                      </Border>
+                      <VerticalStackLayout Grid.Column="1" Spacing="3" VerticalOptions="Center">
+                        <Label Text="{Binding SumText}" Style="{StaticResource H2}"/>
+                        <Label Text="{Binding Note}" TextColor="{StaticResource Danger}" FontFamily="InterBold" FontSize="12"/>
+                        <Label Text="{Binding P.Name}" Style="{StaticResource Bold}" FontSize="15"/>
+                        <Label Text="{Binding SubText}" Style="{StaticResource MutedText}" FontSize="12"/>
+                      </VerticalStackLayout>
+                    </Grid>
+                  </DataTemplate>
+                </BindableLayout.ItemTemplate>
+              </VerticalStackLayout>
+              <BoxView HeightRequest="1" Color="{StaticResource Dark}"/>
+              <Grid ColumnDefinitions="*,Auto">
+                <Label x:Name="TotalTitle" Style="{StaticResource MutedText}" FontSize="14"/>
+                <Label x:Name="TotalL" Grid.Column="1" Style="{StaticResource H2}" TextColor="{StaticResource Accent}"/>
+              </Grid>
+              <Label x:Name="LeftL" TextColor="{StaticResource Danger}" FontFamily="InterBold" FontSize="13"/>
+            </VerticalStackLayout>
+          </Border>
+        </VerticalStackLayout>
+      </Border>
+
+      <Label x:Name="MsgL" TextColor="{StaticResource Good}" FontFamily="InterBold" HorizontalOptions="Center"/>
+      <Button x:Name="GotBtn" Text="Я получил заказ" Style="{StaticResource Btn}" Margin="12,0" Clicked="OnGot"/>
+
+      <!-- Следующий заказ -->
+      <VerticalStackLayout Spacing="10" Margin="12,8,12,0">
+        <Label Text="Добавьте в следующий заказ" Style="{StaticResource H1}" FontSize="22"/>
+        <ScrollView Orientation="Horizontal" HorizontalScrollBarVisibility="Never">
+          <HorizontalStackLayout x:Name="UpsellList" BindableLayout.ItemTemplate="{StaticResource ProductTile}"/>
+        </ScrollView>
+      </VerticalStackLayout>
+    </VerticalStackLayout>
+  </ScrollView>
+</ContentPage>

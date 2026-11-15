@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:Athlet"
+             x:Class="Athlet.App">
+  <Application.Resources>
+    <!-- Палитра (современная тёмная, неон-лайм + оранжевый) -->
+    <Color x:Key="Accent">#FF6A2B</Color>
+    <Color x:Key="Accent2">#FFA24D</Color>
+    <Color x:Key="Dark">#0A0C10</Color>
+    <Color x:Key="Card">#13161C</Color>
+    <Color x:Key="Card2">#1C2028</Color>
+    <Color x:Key="Line">#262B35</Color>
+    <Color x:Key="Glass">#99101318</Color>
+    <Color x:Key="Muted">#8A93A3</Color>
+    <Color x:Key="Good">#3DDC84</Color>
+    <Color x:Key="Gold">#FFC24A</Color>
+    <Color x:Key="Danger">#FF6B6B</Color>
+
+    <LinearGradientBrush x:Key="HeroBrush" StartPoint="0,0" EndPoint="1,1">
+      <GradientStop Color="#FF5A1F" Offset="0"/>
+      <GradientStop Color="#FFA24D" Offset="1"/>
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="FadeBrush" StartPoint="0,0" EndPoint="0,1">
+      <GradientStop Color="#00000000" Offset="0"/>
+      <GradientStop Color="#CC0A0C10" Offset="1"/>
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="CardBrush" StartPoint="0,0" EndPoint="1,1">
+      <GradientStop Color="#1A1E26" Offset="0"/>
+      <GradientStop Color="#12151B" Offset="1"/>
+    </LinearGradientBrush>
+
+    <!-- Базовые стили -->
+    <Style TargetType="Page" ApplyToDerivedTypes="True"><Setter Property="BackgroundColor" Value="{StaticResource Dark}"/></Style>
+    <Style TargetType="Label"><Setter Property="TextColor" Value="White"/><Setter Property="FontFamily" Value="Inter"/></Style>
+    <Style x:Key="Lbl" TargetType="Label"><Setter Property="TextColor" Value="White"/><Setter Property="FontFamily" Value="Inter"/></Style>
+    <Style x:Key="H1" TargetType="Label" BasedOn="{StaticResource Lbl}"><Setter Property="FontFamily" Value="InterBold"/><Setter Property="FontSize" Value="26"/></Style>
+    <Style x:Key="H2" TargetType="Label" BasedOn="{StaticResource Lbl}"><Setter Property="FontFamily" Value="InterBold"/><Setter Property="FontSize" Value="19"/></Style>
+    <Style x:Key="Bold" TargetType="Label" BasedOn="{StaticResource Lbl}"><Setter Property="FontFamily" Value="InterBold"/></Style>
+    <Style x:Key="MutedText" TargetType="Label" BasedOn="{StaticResource Lbl}"><Setter Property="TextColor" Value="{StaticResource Muted}"/><Setter Property="FontSize" Value="13"/></Style>
+    <Style x:Key="Price" TargetType="Label" BasedOn="{StaticResource Lbl}"><Setter Property="TextColor" Value="{StaticResource Accent}"/><Setter Property="FontFamily" Value="InterBold"/><Setter Property="FontSize" Value="17"/></Style>
+    <Style x:Key="OldPrice" TargetType="Label" BasedOn="{StaticResource Lbl}"><Setter Property="TextColor" Value="{StaticResource Muted}"/><Setter Property="FontSize" Value="12"/><Setter Property="TextDecorations" Value="Strikethrough"/></Style>
+
+    <Style TargetType="Entry"><Setter Property="TextColor" Value="White"/><Setter Property="PlaceholderColor" Value="{StaticResource Muted}"/><Setter Property="FontFamily" Value="Inter"/><Setter Property="BackgroundColor" Value="Transparent"/></Style>
+    <Style TargetType="Editor"><Setter Property="TextColor" Value="White"/><Setter Property="PlaceholderColor" Value="{StaticResource Muted}"/><Setter Property="FontFamily" Value="Inter"/><Setter Property="BackgroundColor" Value="Transparent"/></Style>
+    <Style TargetType="SearchBar"><Setter Property="TextColor" Value="White"/><Setter Property="PlaceholderColor" Value="{StaticResource Muted}"/><Setter Property="FontFamily" Value="Inter"/></Style>
+    <Style TargetType="Picker"><Setter Property="TextColor" Value="White"/><Setter Property="TitleColor" Value="{StaticResource Muted}"/><Setter Property="FontFamily" Value="Inter"/><Setter Property="BackgroundColor" Value="Transparent"/></Style>
+
+    <Style x:Key="CardBox" TargetType="Border">
+      <Setter Property="Background" Value="{StaticResource CardBrush}"/>
+      <Setter Property="Stroke" Value="{StaticResource Line}"/>
+      <Setter Property="StrokeThickness" Value="1"/>
+      <Setter Property="StrokeShape" Value="RoundRectangle 22"/>
+      <Setter Property="Padding" Value="16"/>
+    </Style>
+    <Style x:Key="Field" TargetType="Border">
+      <Setter Property="BackgroundColor" Value="{StaticResource Card}"/>
+      <Setter Property="Stroke" Value="{StaticResource Line}"/>
+      <Setter Property="StrokeThickness" Value="1"/>
+      <Setter Property="StrokeShape" Value="RoundRectangle 16"/>
+      <Setter Property="Padding" Value="14,0"/>
+    </Style>
+
+    <Style x:Key="Btn" TargetType="Button">
+      <Setter Property="Background" Value="{StaticResource HeroBrush}"/><Setter Property="TextColor" Value="White"/>
+      <Setter Property="CornerRadius" Value="27"/><Setter Property="HeightRequest" Value="54"/>
+      <Setter Property="FontFamily" Value="InterBold"/><Setter Property="FontSize" Value="16"/>
+    </Style>
+    <Style x:Key="Ghost" TargetType="Button">
+      <Setter Property="BackgroundColor" Value="{StaticResource Card2}"/><Setter Property="TextColor" Value="White"/>
+      <Setter Property="CornerRadius" Value="23"/><Setter Property="HeightRequest" Value="46"/><Setter Property="BorderColor" Value="{StaticResource Line}"/><Setter Property="BorderWidth" Value="1"/>
+      <Setter Property="FontFamily" Value="InterBold"/><Setter Property="FontSize" Value="14"/>
+    </Style>
+    <Style x:Key="Mini" TargetType="Button">
+      <Setter Property="BackgroundColor" Value="{StaticResource Card2}"/><Setter Property="TextColor" Value="White"/>
+      <Setter Property="WidthRequest" Value="38"/><Setter Property="HeightRequest" Value="38"/><Setter Property="Padding" Value="0"/>
+      <Setter Property="CornerRadius" Value="19"/><Setter Property="FontSize" Value="18"/><Setter Property="FontFamily" Value="InterBold"/>
+    </Style>
+
+    <!-- Чип категории / вкуса -->
+    <DataTemplate x:Key="Chip">
+      <Border Padding="16,0" HeightRequest="40" StrokeShape="RoundRectangle 20" Stroke="{StaticResource Line}" StrokeThickness="1" BackgroundColor="{StaticResource Card}">
+        <VisualStateManager.VisualStateGroups><VisualStateGroupList><VisualStateGroup Name="CommonStates">
+          <VisualState Name="Normal"/>
+          <VisualState Name="Selected"><VisualState.Setters><Setter Property="BackgroundColor" Value="{StaticResource Accent}"/><Setter Property="Stroke" Value="{StaticResource Accent}"/></VisualState.Setters></VisualState>
+        </VisualStateGroup></VisualStateGroupList></VisualStateManager.VisualStateGroups>
+        <Label Text="{Binding .}" VerticalOptions="Center" FontFamily="InterBold" FontSize="14"/>
+      </Border>
+    </DataTemplate>
+
+    <!-- Чип промокода -->
+    <Style x:Key="PromoChip" TargetType="Border">
+      <Setter Property="BackgroundColor" Value="{StaticResource Card2}"/>
+      <Setter Property="Stroke" Value="{StaticResource Accent}"/>
+      <Setter Property="StrokeThickness" Value="1"/>
+      <Setter Property="StrokeShape" Value="RoundRectangle 14"/>
+      <Setter Property="Padding" Value="10,6"/>
+    </Style>
+
+    <!-- Карточка товара для сетки -->
+    <DataTemplate x:Key="ProductCard">
+      <Border Margin="5" Padding="0" StrokeShape="RoundRectangle 24" Stroke="{StaticResource Line}" StrokeThickness="1" BackgroundColor="{StaticResource Card}">
+        <Border.GestureRecognizers>
+          <TapGestureRecognizer Command="{x:Static local:Cmds.Open}" CommandParameter="{Binding .}"/>
+        </Border.GestureRecognizers>
+        <VerticalStackLayout Spacing="0">
+          <Grid HeightRequest="170">
+            <Image Source="{Binding ImageSrc}" Aspect="AspectFill"/>
+            <Image Source="{Binding RemoteSrc}" Aspect="AspectFill"/>
+            <BoxView Background="{StaticResource FadeBrush}" VerticalOptions="End" HeightRequest="48" Opacity="0.55"/>
+            <Border IsVisible="{Binding HasDiscount}" BackgroundColor="{StaticResource Good}" HorizontalOptions="Start" VerticalOptions="Start" Margin="10" Padding="9,3" StrokeShape="RoundRectangle 10" Stroke="Transparent">
+              <Label Text="{Binding DiscountText}" FontFamily="InterBold" FontSize="12" TextColor="#0E1014"/>
+            </Border>
+            <Border WidthRequest="36" HeightRequest="36" StrokeShape="RoundRectangle 18" Stroke="Transparent" BackgroundColor="{StaticResource Glass}" HorizontalOptions="End" VerticalOptions="Start" Margin="10">
+              <Label Text="{Binding FavIcon}" TextColor="{Binding FavColor}" FontSize="20" HorizontalOptions="Center" VerticalOptions="Center"/>
+              <Border.GestureRecognizers><TapGestureRecognizer Command="{x:Static local:Cmds.Fav}" CommandParameter="{Binding .}"/></Border.GestureRecognizers>
+            </Border>
+          </Grid>
+          <VerticalStackLayout Padding="12,10,12,12" Spacing="3">
+            <Label Text="{Binding Brand}" Style="{StaticResource MutedText}" FontSize="11" CharacterSpacing="1"/>
+            <Label Text="{Binding Name}" Style="{StaticResource Bold}" FontSize="14" MaxLines="2" LineBreakMode="TailTruncation"/>
+            <HorizontalStackLayout Spacing="6">
+              <Label Text="{Binding RatingText}" TextColor="{StaticResource Gold}" FontSize="12"/>
+              <Label Text="{Binding Weight}" Style="{StaticResource MutedText}" FontSize="12"/>
+            </HorizontalStackLayout>
+            <Grid ColumnDefinitions="*,Auto" Margin="0,2,0,0">
+              <VerticalStackLayout Spacing="0" VerticalOptions="End">
+                <Label Text="{Binding OldPriceText}" Style="{StaticResource OldPrice}"/>
+                <Label Text="{Binding PriceText}" Style="{StaticResource Price}"/>
+              </VerticalStackLayout>
+              <Border Grid.Column="1" WidthRequest="40" HeightRequest="40" StrokeShape="RoundRectangle 20" Stroke="Transparent" BackgroundColor="{Binding AddColor}" VerticalOptions="End">
+                <Label Text="{Binding AddIcon}" FontFamily="InterBold" FontSize="22" TextColor="White" HorizontalOptions="Center" VerticalOptions="Center"/>
+                <Border.GestureRecognizers><TapGestureRecognizer Command="{x:Static local:Cmds.Add}" CommandParameter="{Binding .}"/></Border.GestureRecognizers>
+              </Border>
+            </Grid>
+          </VerticalStackLayout>
+        </VerticalStackLayout>
+      </Border>
+    </DataTemplate>
+
+    <!-- Карточка товара для горизонтальных лент (фиксированная ширина) -->
+    <DataTemplate x:Key="ProductTile">
+      <Border Margin="0,0,10,0" Padding="0" WidthRequest="166" StrokeShape="RoundRectangle 24" Stroke="{StaticResource Line}" StrokeThickness="1" BackgroundColor="{StaticResource Card}">
+        <Border.GestureRecognizers>
+          <TapGestureRecognizer Command="{x:Static local:Cmds.Open}" CommandParameter="{Binding .}"/>
+        </Border.GestureRecognizers>
+        <VerticalStackLayout Spacing="0">
+          <Grid HeightRequest="150">
+            <Image Source="{Binding ImageSrc}" Aspect="AspectFill"/>
+            <Image Source="{Binding RemoteSrc}" Aspect="AspectFill"/>
+            <BoxView Background="{StaticResource FadeBrush}" VerticalOptions="End" HeightRequest="48" Opacity="0.55"/>
+            <Border IsVisible="{Binding HasDiscount}" BackgroundColor="{StaticResource Good}" HorizontalOptions="Start" VerticalOptions="Start" Margin="8" Padding="8,3" StrokeShape="RoundRectangle 8" Stroke="Transparent">
+              <Label Text="{Binding DiscountText}" FontFamily="InterBold" FontSize="12" TextColor="#0E1014"/>
+            </Border>
+            <Border WidthRequest="32" HeightRequest="32" StrokeShape="RoundRectangle 16" Stroke="Transparent" BackgroundColor="{StaticResource Glass}" HorizontalOptions="End" VerticalOptions="Start" Margin="8">
+              <Label Text="{Binding FavIcon}" TextColor="{Binding FavColor}" FontSize="18" HorizontalOptions="Center" VerticalOptions="Center"/>
+              <Border.GestureRecognizers><TapGestureRecognizer Command="{x:Static local:Cmds.Fav}" CommandParameter="{Binding .}"/></Border.GestureRecognizers>
+            </Border>
+          </Grid>
+          <VerticalStackLayout Padding="10,8,10,10" Spacing="2">
+            <Label Text="{Binding Name}" Style="{StaticResource Bold}" FontSize="13" MaxLines="2" LineBreakMode="TailTruncation"/>
+            <Label Text="{Binding RatingText}" TextColor="{StaticResource Gold}" FontSize="12"/>
+            <Grid ColumnDefinitions="*,Auto" Margin="0,2,0,0">
+              <VerticalStackLayout Spacing="0" VerticalOptions="End">
+                <Label Text="{Binding OldPriceText}" Style="{StaticResource OldPrice}"/>
+                <Label Text="{Binding PriceText}" Style="{StaticResource Price}" FontSize="15"/>
+              </VerticalStackLayout>
+              <Border Grid.Column="1" WidthRequest="38" HeightRequest="38" StrokeShape="RoundRectangle 19" Stroke="Transparent" BackgroundColor="{Binding AddColor}" VerticalOptions="End">
+                <Label Text="{Binding AddIcon}" FontFamily="InterBold" FontSize="21" TextColor="White" HorizontalOptions="Center" VerticalOptions="Center"/>
+                <Border.GestureRecognizers><TapGestureRecognizer Command="{x:Static local:Cmds.Add}" CommandParameter="{Binding .}"/></Border.GestureRecognizers>
+              </Border>
+            </Grid>
+          </VerticalStackLayout>
+        </VerticalStackLayout>
+      </Border>
+    </DataTemplate>
+  </Application.Resources>
+</Application>

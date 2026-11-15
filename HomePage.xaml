@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Athlet.HomePage" Title="ATHLET" Shell.NavBarIsVisible="False">
+  <ScrollView>
+    <VerticalStackLayout Spacing="24" Padding="0,12,0,32">
+
+      <!-- Шапка -->
+      <Grid ColumnDefinitions="*,Auto" Padding="16,0">
+        <VerticalStackLayout Spacing="0">
+          <Label x:Name="Hello" Style="{StaticResource MutedText}"/>
+          <Label Text="ATHLET" Style="{StaticResource H1}" FontSize="32" CharacterSpacing="6" TextColor="{StaticResource Accent}"/>
+        </VerticalStackLayout>
+        <Border Grid.Column="1" WidthRequest="46" HeightRequest="46" StrokeShape="RoundRectangle 23" Stroke="{StaticResource Line}" StrokeThickness="1" BackgroundColor="{StaticResource Card}" VerticalOptions="Center">
+          <Label Text="♥" FontSize="22" TextColor="#FF4D6A" HorizontalOptions="Center" VerticalOptions="Center"/>
+          <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnFavs"/></Border.GestureRecognizers>
+        </Border>
+      </Grid>
+
+      <Border Style="{StaticResource Field}" StrokeShape="RoundRectangle 26" HeightRequest="52" Margin="16,0">
+        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+          <Label Text="🔍" FontSize="18" VerticalOptions="Center"/>
+          <Entry x:Name="Search" Grid.Column="1" Placeholder="Найти протеин, креатин, шейкер…" ReturnType="Search" Completed="OnSearch" VerticalOptions="Center"/>
+        </Grid>
+      </Border>
+
+      <!-- Успейте забрать -->
+      <Border x:Name="PickupCard" IsVisible="False" Margin="16,0" Padding="12" StrokeShape="RoundRectangle 26" Stroke="{StaticResource Accent}" StrokeThickness="1" Background="{StaticResource CardBrush}">
+        <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnPickup"/></Border.GestureRecognizers>
+        <Grid ColumnDefinitions="64,*,Auto" ColumnSpacing="12">
+          <Border WidthRequest="64" HeightRequest="64" Padding="0" StrokeShape="RoundRectangle 14" Stroke="Transparent">
+            <Grid>
+              <Image x:Name="PickImg" Aspect="AspectFill"/>
+              <Image x:Name="PickWeb" Aspect="AspectFill"/>
+            </Grid>
+          </Border>
+          <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
+            <Label Text="Успейте забрать" Style="{StaticResource H2}" FontSize="17"/>
+            <Label x:Name="PickSub" Style="{StaticResource MutedText}" FontSize="12"/>
+            <Label x:Name="PickLast" TextColor="{StaticResource Danger}" FontFamily="InterBold" FontSize="12"/>
+          </VerticalStackLayout>
+          <Border Grid.Column="2" WidthRequest="44" HeightRequest="44" StrokeShape="RoundRectangle 14" Stroke="Transparent" Background="{StaticResource HeroBrush}" VerticalOptions="Center">
+            <Label Text="▥" FontSize="22" HorizontalOptions="Center" VerticalOptions="Center"/>
+          </Border>
+        </Grid>
+      </Border>
+
+      <!-- Баннеры -->
+      <VerticalStackLayout Spacing="8">
+        <CarouselView x:Name="Banners" HeightRequest="190" Loop="True" IsBounceEnabled="False" HorizontalScrollBarVisibility="Never">
+          <CarouselView.ItemTemplate>
+            <DataTemplate>
+              <Border Margin="16,0" Padding="0" StrokeShape="RoundRectangle 30" Stroke="{StaticResource Line}" StrokeThickness="1" BackgroundColor="{StaticResource Card}">
+                <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnBanner"/></Border.GestureRecognizers>
+                <Grid>
+                  <Image Source="{Binding Image}" Aspect="AspectFill"/>
+                  <BoxView Background="{StaticResource FadeBrush}" Opacity="0.35"/>
+                  <VerticalStackLayout Padding="20" Spacing="6" VerticalOptions="Center" HorizontalOptions="Start" WidthRequest="200">
+                    <Label Text="{Binding Tag}" Style="{StaticResource Bold}" FontSize="12" CharacterSpacing="3" TextColor="{StaticResource Accent2}"/>
+                    <Label Text="{Binding Title}" Style="{StaticResource H1}" FontSize="23"/>
+                    <Label Text="{Binding Sub}" Style="{StaticResource MutedText}"/>
+                    <Border Padding="18,10" StrokeShape="RoundRectangle 20" Stroke="Transparent" Background="{StaticResource HeroBrush}" HorizontalOptions="Start" Margin="0,6,0,0">
+                      <Label Text="Смотреть" Style="{StaticResource Bold}" FontSize="14"/>
+                    </Border>
+                  </VerticalStackLayout>
+                </Grid>
+              </Border>
+            </DataTemplate>
+          </CarouselView.ItemTemplate>
+        </CarouselView>
+        <IndicatorView x:Name="Dots" IndicatorColor="#2B313C" SelectedIndicatorColor="{StaticResource Accent}" IndicatorSize="7" HorizontalOptions="Center"/>
+      </VerticalStackLayout>
+
+      <!-- Подборки по цели -->
+      <VerticalStackLayout Spacing="10">
+        <Label Text="Подобрать по цели" Style="{StaticResource H2}" Margin="16,0"/>
+        <CollectionView x:Name="Goals" HeightRequest="44" SelectionMode="Single" ItemTemplate="{StaticResource Chip}" SelectionChanged="OnGoal" Margin="16,0,0,0">
+          <CollectionView.ItemsLayout><LinearItemsLayout Orientation="Horizontal" ItemSpacing="8"/></CollectionView.ItemsLayout>
+        </CollectionView>
+      </VerticalStackLayout>
+
+      <!-- Категории -->
+      <VerticalStackLayout Spacing="10">
+        <Label Text="Категории" Style="{StaticResource H2}" Margin="16,0"/>
+        <CollectionView x:Name="Cats" HeightRequest="108" SelectionMode="Single" SelectionChanged="OnCat" Margin="16,0,0,0">
+          <CollectionView.ItemsLayout><LinearItemsLayout Orientation="Horizontal" ItemSpacing="8"/></CollectionView.ItemsLayout>
+          <CollectionView.ItemTemplate>
+            <DataTemplate>
+              <VerticalStackLayout Spacing="6" WidthRequest="80">
+                <Border WidthRequest="76" HeightRequest="76" Padding="0" StrokeShape="RoundRectangle 38" Stroke="{StaticResource Accent}" StrokeThickness="2" BackgroundColor="{StaticResource Card}">
+                  <Image Source="{Binding Image}" Aspect="AspectFill"/>
+                </Border>
+                <Label Text="{Binding Name}" Style="{StaticResource Bold}" FontSize="12" HorizontalTextAlignment="Center" LineBreakMode="TailTruncation" MaxLines="1"/>
+              </VerticalStackLayout>
+            </DataTemplate>
+          </CollectionView.ItemTemplate>
+        </CollectionView>
+      </VerticalStackLayout>
+
+      <!-- Хиты -->
+      <VerticalStackLayout Spacing="10">
+        <Grid ColumnDefinitions="*,Auto" Margin="16,0">
+          <Label Text="🔥 Хиты продаж" Style="{StaticResource H2}"/>
+          <Label Grid.Column="1" Text="Все ›" TextColor="{StaticResource Accent}" FontFamily="InterBold" VerticalOptions="Center">
+            <Label.GestureRecognizers><TapGestureRecognizer Tapped="OnAllHits"/></Label.GestureRecognizers>
+          </Label>
+        </Grid>
+        <CollectionView x:Name="Hits" HeightRequest="322" ItemTemplate="{StaticResource ProductTile}" Margin="16,0,0,0">
+          <CollectionView.ItemsLayout><LinearItemsLayout Orientation="Horizontal"/></CollectionView.ItemsLayout>
+        </CollectionView>
+      </VerticalStackLayout>
+
+      <!-- Промокод -->
+      <Border Margin="16,0" Padding="20" StrokeShape="RoundRectangle 28" Stroke="Transparent" Background="{StaticResource HeroBrush}">
+        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+          <VerticalStackLayout Spacing="2" VerticalOptions="Center">
+            <Label Text="Промокод ATHLET10" Style="{StaticResource H2}"/>
+            <Label Text="−10% на весь заказ. Введите его в корзине." FontSize="12" TextColor="#FFE9DD"/>
+          </VerticalStackLayout>
+          <Button x:Name="PromoBtn" Grid.Column="1" Text="Копировать" BackgroundColor="#0A0C10" TextColor="White" CornerRadius="21" HeightRequest="42" FontFamily="InterBold" FontSize="13" Clicked="OnCopyPromo"/>
+        </Grid>
+      </Border>
+
+      <!-- Акции -->
+      <VerticalStackLayout Spacing="10">
+        <Grid ColumnDefinitions="*,Auto" Margin="16,0">
+          <Label Text="💸 Скидки" Style="{StaticResource H2}"/>
+          <Label Grid.Column="1" Text="Все ›" TextColor="{StaticResource Accent}" FontFamily="InterBold" VerticalOptions="Center">
+            <Label.GestureRecognizers><TapGestureRecognizer Tapped="OnSaleLink"/></Label.GestureRecognizers>
+          </Label>
+        </Grid>
+        <CollectionView x:Name="Sales" HeightRequest="322" ItemTemplate="{StaticResource ProductTile}" Margin="16,0,0,0">
+          <CollectionView.ItemsLayout><LinearItemsLayout Orientation="Horizontal"/></CollectionView.ItemsLayout>
+        </CollectionView>
+      </VerticalStackLayout>
+
+      <!-- Новинки -->
+      <VerticalStackLayout Spacing="10">
+        <Label Text="✨ Новинки" Style="{StaticResource H2}" Margin="16,0"/>
+        <CollectionView x:Name="News" HeightRequest="322" ItemTemplate="{StaticResource ProductTile}" Margin="16,0,0,0">
+          <CollectionView.ItemsLayout><LinearItemsLayout Orientation="Horizontal"/></CollectionView.ItemsLayout>
+        </CollectionView>
+      </VerticalStackLayout>
+
+      <!-- Недавно смотрели -->
+      <VerticalStackLayout x:Name="RecentBox" Spacing="10" IsVisible="False">
+        <Label Text="Вы смотрели" Style="{StaticResource H2}" Margin="16,0"/>
+        <CollectionView x:Name="Recent" HeightRequest="322" ItemTemplate="{StaticResource ProductTile}" Margin="16,0,0,0">
+          <CollectionView.ItemsLayout><LinearItemsLayout Orientation="Horizontal"/></CollectionView.ItemsLayout>
+        </CollectionView>
+      </VerticalStackLayout>
+
+    </VerticalStackLayout>
+  </ScrollView>
+</ContentPage>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="Athlet.InfoPage" Title="О магазине">
+  <ScrollView>
+    <VerticalStackLayout Padding="16,12,16,28" Spacing="14">
+      <Label Text="ATHLET" Style="{StaticResource H1}" FontSize="34" CharacterSpacing="5" TextColor="{StaticResource Accent}"/>
+      <Label Text="Магазин спортивного питания: протеин, креатин, аминокислоты, гейнеры, витамины, батончики, предтренировочные комплексы и аксессуары для тех, кто тренируется и следит за рационом." Style="{StaticResource MutedText}" FontSize="14"/>
+
+      <Border Style="{StaticResource CardBox}">
+        <VerticalStackLayout Spacing="10">
+          <Label Text="Почему ATHLET" Style="{StaticResource H2}"/>
+          <Label Text="✅ Оригинальная продукция с сертификатами" Style="{StaticResource MutedText}" FontSize="14"/>
+          <Label Text="🚚 Доставка за 3 дня, бесплатно от 5 000 ₽" Style="{StaticResource MutedText}" FontSize="14"/>
+          <Label Text="🎁 5% от суммы заказа возвращаются бонусами" Style="{StaticResource MutedText}" FontSize="14"/>
+          <Label Text="💬 Помощь с подбором питания" Style="{StaticResource MutedText}" FontSize="14"/>
+        </VerticalStackLayout>
+      </Border>
+
+      <Border Style="{StaticResource CardBox}">
+        <VerticalStackLayout Spacing="9">
+          <Label Text="Контакты" Style="{StaticResource H2}"/>
+          <Label Text="📞 +7 (800) 123-45-67"/>
+          <Label Text="✉️ info@athlet.example"/>
+          <Label Text="📍 ул. Спортивная, 10"/>
+          <Label Text="🕘 Ежедневно с 9:00 до 21:00"/>
+        </VerticalStackLayout>
+      </Border>
+      <Button Text="Позвонить в магазин" Style="{StaticResource Btn}" Clicked="OnCall"/>
+      <Button Text="Открыть на карте" Style="{StaticResource Ghost}" Clicked="OnMap"/>
+    </VerticalStackLayout>
+  </ScrollView>
+</ContentPage>
