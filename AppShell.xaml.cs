@@ -13,7 +13,7 @@ public partial class AppShell : Shell
         Navigated += async (_, _) =>
         {
             await UpdateCartTitle();
-            if (CurrentPage?.Content is View v) { v.Opacity = 0; await v.FadeTo(1, 220, Easing.CubicOut); }
+           if (CurrentPage is ContentPage cp && cp.Content is View v) { v.Opacity = 0; await v.FadeTo(1, 220, Easing.CubicOut); }
         };
     }
 
